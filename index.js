@@ -9,7 +9,6 @@ let resolution = 10000;
 
 function square(x) {
     return x * x;
-    "a * a"
 }
 
 function prepareGrid() {
