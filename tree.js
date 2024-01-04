@@ -53,6 +53,7 @@ class BinaryTree {
 let expressionTree = new BinaryTree();
 let parentIndex = 0;
 function evaluateExpression(expression, parentKey) {
+    expression = expression.trim();
     parentIndex++;
     let parent = parentIndex;
     // if no + or - sign can be found, take the first available * or / sign
@@ -60,6 +61,32 @@ function evaluateExpression(expression, parentKey) {
     let firstDivisionOperandIndex = -1;
     let leftParentisis = 0;
     let rightParentisis = 0;
+
+    // See if the overall expression is encapsulated by parentisis
+    // ((2 + 4) + 5) is encapsulated while (2 + 4) - (3 + 2) is not
+    // (2 + 4)
+    // ((2 + 4) - 3) + 4 is not
+    if (expression[0] === "(" && expression[expression.length - 1] === ")") {
+        for (let i = 0; i < expression.length; i++) {
+            if (expression[i] == "(") {
+                leftParentisis++;
+            }
+            if (expression[i] == ")") {
+                rightParentisis++;
+            }
+
+            if (leftParentisis === rightParentisis && i != expression.length - 1) {
+                break;   
+            }
+
+            if (i = expression.length - 1) {
+                expression = expression.substring(1, expression.length - 1);
+            }
+        }
+    }
+
+    leftParentisis = 0;
+    rightParentisis = 0;
 
     for (let i = 0; i < expression.length; i++) {
         let char = expression[i];
@@ -114,16 +141,7 @@ function evaluateExpression(expression, parentKey) {
     expressionTree.insert(parentKey, parentIndex, expression);
 }
 
-evaluateExpression("(2 * 3) + 2");
+// account better for subtraction
 
+evaluateExpression("((2 * 3) - 2 + 5)");
 console.dir(expressionTree.root, {depth: null});
-// ((2 * (3 +5)) / 7 + 9) * 7 - 6 + (3 - 2 * 4)
-// 2 * 3 * 4
-// 2 / 3 + 4 + 2 * 3 + 4
-
-// Go through till you find a + or -, this will be the last value evaluated
-// (2 + 3 * 4) if the entire expression is encapsulated in (), remove them.
-// ( ) can be seen as it's own constant that will be further splitted later
-// if + and - cannot be found, look for multiplication then division
-
-// ((2 * (3 + 5)) / 7 + 9) * 7 - 6 + (3 - 2 * 4)
